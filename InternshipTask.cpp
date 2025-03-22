@@ -21,15 +21,18 @@ int main()
 	flights.push_back(Flight("LON", "FRA", 50));
 	
 
-	vector<Route> test = Route::PossibleRoutes(flights, "SOF", "LON");
+	vector<Route> routeList = Route::PossibleRoutes(flights, "SOF", "LON");
 
-	for (Route rt : test)
+	if (routeList.empty()) cout << "No available routes.";
+	else
 	{
-		for (string str : rt.GetRouteStops())
+		for (Route rt : routeList)
 		{
-			cout << str << " , ";
+			for (string str : rt.GetRouteStops())
+			{
+				cout << str << " , ";
+			}
+			cout << rt.GetRoutePrice() << endl;
 		}
-		cout << rt.GetRoutePrice() << endl;
 	}
-
 }
