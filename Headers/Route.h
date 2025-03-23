@@ -21,7 +21,7 @@ class Route
 
 
 public:
-	static vector<Route> PossibleRoutes(vector<Flight> flights, string origin, string destination);
+	static vector<Route> PossibleRoutes(vector<Flight> flights, string origin, string destination, unsigned int maxFlights = UINT_MAX-1);
 	static void SortRoutes(vector<Route>& routes);
 
 	//Getters

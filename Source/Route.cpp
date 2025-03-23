@@ -53,7 +53,7 @@ Route Route::LoopThrough(vector<Flight> flights, Route& route, string destinatio
 	return route;
 }
 
-vector<Route> Route::PossibleRoutes(vector<Flight> flights, string origin, string destination)
+vector<Route> Route::PossibleRoutes(vector<Flight> flights, string origin, string destination, unsigned int maxFlights)
 {
 	vector<Route> result;
 	Route route = Route();
@@ -67,7 +67,7 @@ vector<Route> Route::PossibleRoutes(vector<Flight> flights, string origin, strin
 		{
 			route.AddFlight(flights[i]);
 			Route current = LoopThrough(flights, route, destination);
-			if (!current.routeStops.empty())
+			if (!current.routeStops.empty() && current.GetRouteStops().size() <= maxFlights + 1)
 			{
 				if (current.routeStops.back() == destination)
 					result.push_back(current);
