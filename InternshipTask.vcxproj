@@ -132,6 +132,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\Flight.h" />
+    <ClInclude Include="Headers\httplib.h" />
+    <ClInclude Include="Headers\json.hpp" />
     <ClInclude Include="Headers\Route.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
