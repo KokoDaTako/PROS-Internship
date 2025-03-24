@@ -48,8 +48,17 @@ int main()
 			flights.push_back(Flight("SOF", "FRA", 10));
 			flights.push_back(Flight("LON", "FRA", 50));
 
-			json requestBody = json::parse(req.body);
+			json requestBody;
 			
+			try
+			{
+				requestBody = json::parse(req.body);
+			}
+			catch (exception){
+				res.set_content("{\"message\" : \"Unable to parse request body!\"}", "application/json");
+				res.status = 400;
+				return;
+			}
 			vector<Route> routeList;
 			unsigned int maxFlights = UINT_MAX - 1;
 			string origin, destination;
@@ -61,11 +70,13 @@ int main()
 				if (!requestBody.contains("origin"))
 				{
 					res.set_content("{\"message\" : \"Missing origin input!\"}", "application/json");
+					res.status = 400;
 					return;
 				}
 				if (requestBody["origin"].type() != json::value_t::string)
 				{
 					res.set_content("{\"message\" : \"The input for origin is not in the correct format!\"}", "application/json");
+					res.status = 400;
 					return;
 				}
 				origin = requestBody["origin"];
@@ -74,11 +85,13 @@ int main()
 				if (!requestBody.contains("destination"))
 				{
 					res.set_content("{\"message\" : \"Missing destination input!\"}", "application/json");
+					res.status = 400;
 					return;
 				}
 				if (requestBody["destination"].type() != json::value_t::string)
 				{
 					res.set_content("{\"message\" : \"The input for destination is not in the correct format!\"}", "application/json");
+					res.status = 400;
 					return;
 				}
 				destination = requestBody["destination"];
@@ -89,12 +102,14 @@ int main()
 
 					if (requestBody["maxFlights"].type() != json::value_t::number_unsigned)
 					{
-						res.set_content("{\"message\" : \"The input for maxFlights is not in the correct format\"}", "application/json");
+						res.set_content("{\"message\" : \"The input for maxFlights is not in the correct format!\"}", "application/json");
+						res.status = 400;
 						return;
 					}
 					if ((unsigned long long)requestBody["maxFlights"] != (unsigned int)requestBody["maxFlights"])
 					{
-						res.set_content("{\"message\" : \"You have gone over the maximum amount for the maxFlight filter\"}", "application/json");
+						res.set_content("{\"message\" : \"You have gone over the maximum amount for the maxFlight filter!\"}", "application/json");
+						res.status = 400;
 						return;
 					}
 					maxFlights = requestBody["maxFlights"];
@@ -106,7 +121,7 @@ int main()
 				//Check if route list is empty
 				if (routeList.empty())
 				{
-					res.set_content("{\"message\" : \"No routes available!\"}", "application/json");
+					res.set_content("[]", "application/json");
 					return;
 				}
 			}
@@ -116,9 +131,8 @@ int main()
 			for (Route route : routeList)
 			{
 				response.push_back({
-					{"price", route.GetRoutePrice()},
-					{"route", route.GetRouteStops()}
-
+					{"route", route.GetRouteStops()},
+					{"price", route.GetRoutePrice()}
 					});
 			}
 
